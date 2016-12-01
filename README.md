@@ -17,6 +17,49 @@ complex environment *subsecond*, with memory deduplication *in a safe context*
 (no user data, only leaks what a dev puts in).  Maybe we don't need Unikernels,
 to give known good state to every user coming in.
 
+# List of exposed System Calls
+
+nanosleep
+read
+readv
+preadv
+pread64
+write
+writev
+pwritev
+pwrite64
+clock_gettime
+gettimeofday
+futex
+poll
+ppoll
+exit
+exit_group
+rt_sigprocmask
+rt_sigtimedwait
+rt_sigreturn
+rt_sigaction
+rt_sigpending
+rt_sigtimedwait
+rt_sigqueueinfo
+rt_sigsuspend
+mprotect
+madvise
+clone 
+mmap 
+munmap 
+mremap 
+brk 
+recvfrom 
+recvmsg 
+sendmsg 
+sendto 
+fstat 
+select
+set_robust_list
+restart_syscall
+close
+
 # Quick Demo
 
 https://autoclave.run has a pretty good demonstration of the ultimate vision here,
