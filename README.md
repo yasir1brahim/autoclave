@@ -19,7 +19,6 @@ to give known good state to every user coming in.
 
 # List of exposed System Calls
 
-```htm
 <table cellspacing="0" border="0">
 	<colgroup width="34"></colgroup>
 	<colgroup width="104"></colgroup>
@@ -266,8 +265,6 @@ to give known good state to every user coming in.
 		<td align="left">fs/open.c</td>
 	</tr>
 </table>
-
-```
 
 
 
