@@ -1,33 +1,46 @@
-diff --git a/ui/vnc.c b/ui/vnc.c
-index 1bedc95..cd12271 100644
---- a/ui/vnc.c
-+++ b/ui/vnc.c
-@@ -46,6 +46,12 @@
- #include "qom/object_interfaces.h"
- #include "qemu/cutils.h"
- 
-+#ifdef CONFIG_SECCOMP
-+#include "sysemu/seccomp.h"
-+#endif
-+
+--- a/vl.c	2016-12-08 15:05:57.184566379 +0500
++++ b/vl.c	2016-12-08 15:08:56.538086000 +0500
+@@ -21,6 +21,8 @@
+  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  * THE SOFTWARE.
+  */
 +void apply_autoclave(void);
 +
- #define VNC_REFRESH_INTERVAL_BASE GUI_REFRESH_INTERVAL_DEFAULT
- #define VNC_REFRESH_INTERVAL_INC  50
- #define VNC_REFRESH_INTERVAL_MAX  GUI_REFRESH_INTERVAL_IDLE
-@@ -2980,6 +2986,8 @@ static void vnc_connect(VncDisplay *vd, QIOChannelSocket *sioc,
-     VncState *vs = g_new0(VncState, 1);
-     bool first_client = QTAILQ_EMPTY(&vd->clients);
-     int i;
-+    
-+    apply_autoclave();
+ #include "qemu/osdep.h"
+ #include "qemu-version.h"
+ #include "qemu/cutils.h"
+@@ -841,7 +843,7 @@
+             struct tm tmp = *tm;
+             tmp.tm_isdst = -1; /* use timezone to figure it out */
+             seconds = mktime(&tmp);
+-	}
++    }
+     else
+         seconds = mktimegm(tm) + rtc_date_offset;
  
-     vs->sioc = sioc;
-     object_ref(OBJECT(vs->sioc));
-@@ -3901,3 +3909,174 @@ static void vnc_register_config(void)
-     qemu_add_opts(&qemu_vnc_opts);
+@@ -1597,6 +1599,7 @@
+ /***********************************************************/
+ /* main execution loop */
+ 
++
+ struct vm_change_state_entry {
+     VMChangeStateHandler *cb;
+     void *opaque;
+@@ -4676,7 +4679,8 @@
+             exit(1);
+         }
+     } else if (autostart) {
+-        vm_start();
++        vm_start();             
++        apply_autoclave();  //applying autoclave after Qemu starts
+     }
+ 
+     os_setup_post();
+@@ -4697,3 +4701,173 @@
+ 
+     return 0;
  }
- opts_init(vnc_register_config);
++
 +
 +struct QemuSeccompSyscallAutoclave {
 +    int32_t num;
@@ -46,7 +59,7 @@ index 1bedc95..cd12271 100644
 +
 +    static const struct QemuSeccompSyscallAutoclave whitelist[] = {
 +
-+{ SCMP_SYS(nanosleep), 250 },
++        { SCMP_SYS(nanosleep), 250 },
 +        { SCMP_SYS(read), 250 },
 +        { SCMP_SYS(readv), 250 },
 +        { SCMP_SYS(preadv), 250 },
@@ -96,8 +109,6 @@ index 1bedc95..cd12271 100644
 +
 +        { SCMP_SYS(restart_syscall), 250 },
 +        { SCMP_SYS(close), 250 },
-+
-+
 +
 +    };
 +
@@ -180,7 +191,7 @@ index 1bedc95..cd12271 100644
 +                            SCMP_A1(SCMP_CMP_EQ, 0xffffffffc008ae67));*/
 +          }
 +
-+	  //VCPU's do all sorts of stuff now?  Clean this up.
++      //VCPU's do all sorts of stuff now?  Clean this up.
 +          if (strncmp(lbuf, "anon_inode:kvm-vcpu", sizeof(lbuf)) == 0) {
 +              seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(ioctl), 1,
 +                            SCMP_A0(SCMP_CMP_EQ, active_fd));
