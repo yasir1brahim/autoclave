@@ -282,7 +282,7 @@ but here's some quick steps to get up and running yourself.
     ### because Reasons
     # apt-get update
     # apt-get build-dep qemu
-    # git clone http://git.qemu.org/git/qemu.git
+    # git clone https://github.com/qemu/qemu.git
     # cd qemu
     # for i in ../patches/*; do patch -p1 < $i; done
     # ./configure --prefix=/usr --enable-vde --enable-seccomp --target-list=x86_64-softmmu
