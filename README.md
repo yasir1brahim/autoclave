@@ -189,7 +189,7 @@ to give known good state to every user coming in.
 	<tr>
 		<td height="32" align="left" sdval="27" sdnum="1033;">27</td>
 		<td align="left">mmap  </td>
-		<td align="left">reates a new mapping in the virtual address space of the calling process.</td>
+		<td align="left">creates a new mapping in the virtual address space of the calling process.</td>
 		<td align="left">mm/mmap.c</td>
 	</tr>
 	<tr>
