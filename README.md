@@ -249,7 +249,7 @@ to give known good state to every user coming in.
 	<tr>
 		<td height="32" align="left" sdval="37" sdnum="1033;">37</td>
 		<td align="left">set_robust_list  </td>
-		<td align="left">equests the kernel to record the head of the list of robust futexes owned by the calling thread</td>
+		<td align="left">requests the kernel to record the head of the list of robust futexes owned by the calling thread</td>
 		<td align="left">kernel/futex_compat.c</td>
 	</tr>
 	<tr>
